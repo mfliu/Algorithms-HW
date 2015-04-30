@@ -257,7 +257,7 @@ public class ClassifierMfl4an extends Classifier {
     private int getNumMatches(String s, List<Object> list) {
         int i = 0;
         for ( Object o : list ) {
-            if( s. equals((String)o)) ++i;
+            if( s.equalsIgnoreCase((String)o)) ++i;
         }
         return i;
     }
@@ -296,19 +296,21 @@ public class ClassifierMfl4an extends Classifier {
 
 	public void train(String trainingDataFilePath) {
         parseData(trainingDataFilePath, true);
-       for (int i = 0 ; i < data.size(); ++i) {
-        System.out.println(data.get(i));
-       } 
         lt50k = getFeatureList(data.get(0).size()-1, "<=50k").size();
         gt50k = getFeatureList(data.get(0).size()-1, ">50k").size();
     }
 
     private double getVariance(String[] info, String Y) {
         double var = getY(Y);
-            System.out.println(var);
         for(int i = 0; i < info.length; i++) {
-            // TODO : make sure that info[i] != -1 and != null
-            var *= getProb(i, info[i], Y);
+            try{
+                int val = Integer.parseInt(info[i]);
+                if(val == -1) continue;
+                var *= getProb(i, val, Y);
+            } catch (Exception e) {
+                if(info[i] == null) continue;
+                var *= getProb(i, (String)info[i], Y);
+            }
         }
         return var;
     }
@@ -320,12 +322,12 @@ public class ClassifierMfl4an extends Classifier {
                 String line = sc.nextLine();
                 System.out.print(line+ " ");
                 String[] info = line.split(" ");
-                double var_LT50 = getVariance(info, "<=50k");
-                double var_GT50 = getVariance(info, ">50k");
+                double var_LT50 = getVariance(info, "<=50K");
+                double var_GT50 = getVariance(info, ">50K");
                 if (var_LT50 > var_GT50) {
-                    System.out.println("<=50k");
+                    System.out.println("<=50K");
                 } else {
-                    System.out.println(">50k");
+                    System.out.println(">50K");
                 }
             }
         } catch (Exception e) {
@@ -380,12 +382,13 @@ public class ClassifierMfl4an extends Classifier {
 						person.add(info[i].toLowerCase());
 					}
 					else if(i == info.length - 1 && training == true) {
-						if(info[info.length-1].equals("<=50k")) {
+						if(info[info.length-1].equalsIgnoreCase("<=50k")) {
 							moreThan50k = "<=50k";
 						}
 						else {
 							moreThan50k = ">50k"; 
 						}
+					person.add(moreThan50k);
 					}
 					else {
 						//System.out.println("Looking for: " + info[i]);
@@ -400,7 +403,6 @@ public class ClassifierMfl4an extends Classifier {
 						}
 					}
 				}
-					person.add(moreThan50k);
 					data.add(person);
 			}
 		}
