@@ -19,13 +19,23 @@ public class ClassifierMfl4an extends Classifier {
 	public Boolean moreThan50k = false;
 	public ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
 
+    private final int L = 4;         // arbitrarily chosen number
+    
 	public ClassifierMfl4an(String namesFilePath) {
 		super(namesFilePath);
 		parseData(namesFilePath, true);
 	}
 
-	public void train(String trainingDataFilePath) {
+    private ArrayList<Object> getFeatureList(int index) {
+        ArrayList<Object> ret = new ArrayList<Object>();
+        for(int i = 0; i < data.size(); ++i) {
+            ret.add(data.get(i).get(index));
+        }
+        return ret;
+    }
 
+	public void train(String trainingDataFilePath) {
+        
 	}
 
 	public void makePredictions(String testDataFilePath) {
