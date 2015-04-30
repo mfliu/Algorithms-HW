@@ -133,7 +133,7 @@ public class ClassifierMfl4an extends Classifier {
 	public float cHong;
 	public float cHolNeth;
 
-  public Boolean moreThan50k = false;
+  	public String moreThan50k = "";
 	public ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
 
     int lt50k;
@@ -284,10 +284,10 @@ public class ClassifierMfl4an extends Classifier {
 					}
 					else if(i == info.length - 1 && training == true) {
 						if(info[info.length-1].equals("<=50k")) {
-							moreThan50k = false;
+							moreThan50k = "<=50k";
 						}
 						else {
-							moreThan50k = true; 
+							moreThan50k = ">50k"; 
 						}
 					}
 					else {
