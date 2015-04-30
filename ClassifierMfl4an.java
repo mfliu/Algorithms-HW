@@ -1,6 +1,7 @@
 import java.lang.Object;
 import java.util.*;
 import java.io.*;
+import java.text.*;
 
 public class ClassifierMfl4an extends Classifier {
 	String[] workClassList = {"Private", "Self-emp-not-inc", "Self-emp-inc", "Federal-gov", "Local-gov", "State-gov", "Without-pay", "Never-worked"};
@@ -13,10 +14,16 @@ public class ClassifierMfl4an extends Classifier {
 	String[] countries = {"United-States", "Cambodia", "England", "Puerto-Rico", "Canada", "Germany", "Outlying-US(Guam-USVI-etc)", "India", "Japan", "Greece", "South", "China", "Cuba", "Iran", "Honduras", "Philippines", "Italy", "Poland", "Jamaica", "Vietnam", "Mexico", "Portugal", "Ireland", "France", "Dominican-Republic", "Laos", "Ecuador", "Taiwan", "Haiti", "Columbia", "Hungary", "Guatemala", "Nicaragua", "Scotland", "Thailand", "Yugoslavia", "El-Salvador", "Trinadad&Tobago", "Peru", "Hong", "Holand-Netherlands"};
 
 	//group divisions
-	public int numAgeGroups = 2;
-	public int numCapGainsGroups = 2;
-	public int numCapLossesGroups = 2;
-	public int numHoursWorkedGroups = 2;
+	public int numAgeGroups = 20;
+	public int numCapGainsGroups = 20;
+	public int numCapLossesGroups = 20;
+	public int numHoursWorkedGroups = 20;
+
+    public int[] ageRange = {0, 100};
+    public int[] capGainsRange = {0, 10000};
+    public int[] capLossesRange = {0, 10000};
+    public int[] hoursWorkedRange = {15, 70};
+
 
 	//age groups: 0-50, 50-100
 	public float age050Y;
@@ -155,7 +162,7 @@ public class ClassifierMfl4an extends Classifier {
     int lt50k;
     int gt50k;
 
-    private final int L = 4;         // arbitrarily chosen number
+    private final int L = 444444;         // arbitrarily chosen number
     
 	public ClassifierMfl4an(String namesFilePath) {
 		super(namesFilePath);
@@ -179,13 +186,19 @@ public class ClassifierMfl4an extends Classifier {
             return relationshipList.length;
         } else if (i == 7) {
             return raceList.length;
-        } else if (i == 9) {
+        } else if (i == 8) {
             return sexList.length;
         } else if (i == 12) {
             return countries.length;
-        }
-        // TODO: do the buckets for integers
-        //
+        } else if (i == 0) {
+            return numAgeGroups;
+        } else if (i == 10) {
+            return numCapLossesGroups;
+        } else if (i == 11) {
+            return numHoursWorkedGroups;
+        } else if (i == 9) {
+            return numCapGainsGroups;
+        } 
         return -1;
     }
 
@@ -198,9 +211,46 @@ public class ClassifierMfl4an extends Classifier {
         return (matches + L) / ((double)getY(Y) + L*getJ(index));
     }
 
-    private double getProb(int index, int lower, int upper, String Y) {
+    private int[] getBounds(int i, int val) {
+        int bottom = 0;
+        int top = 0;
+        double delta = 0;
+        int[] ret = new int[2];
+        if (i == 0) {
+            delta = (ageRange[1] - ageRange[0])/(double)numAgeGroups;
+            top = ageRange[1];
+            bottom = ageRange[0];
+        } else if (i == 10) {
+            top = capLossesRange[1];
+            bottom = capLossesRange[0];
+            delta = (top-bottom)/(double)numCapLossesGroups;
+        } else if (i == 11) {
+            top = ageRange[1];
+            bottom = ageRange[0];
+            delta = (top - bottom)/(double)numHoursWorkedGroups;
+        } else if (i == 9) {
+            delta = (capGainsRange[1] - capGainsRange[0])/(double)numCapGainsGroups;
+            top = capGainsRange[1];
+            bottom = capGainsRange[0];
+        }
+        while((int)(bottom + delta) + 1 < top) {
+            if (bottom <= val && val <= (int)(bottom+delta)) {
+                ret[0] = bottom;
+                ret[1] = (int)(bottom+delta);
+                return ret;
+            } 
+            bottom =(int)(bottom+delta) + 1;
+        }
+        ret[0] = bottom;
+        ret[1] = top;
+        return ret;
+
+    }
+
+    private double getProb(int index, int val, String Y) {
         List<Object> list = getFeatureList(index, Y);
-        int matches = getNumMatches(lower, upper, list);
+        int[] bounds = getBounds ( index, val ) ;
+        int matches = getNumMatches(bounds[0], bounds[1], list);
         return (matches + L) / ((double)getY(Y) + L*getJ(index));
     }
 
@@ -215,7 +265,7 @@ public class ClassifierMfl4an extends Classifier {
     private int getNumMatches(int lower, int upper, List<Object> list) {
         int i = 0;
         for ( Object o : list ) {
-            if( lower <= (int) o  && (int) o <= upper)  ++i;
+            if( lower <= (Integer)o  && (Integer)o <= upper)  ++i;
         }
         return i;
     }
@@ -237,20 +287,25 @@ public class ClassifierMfl4an extends Classifier {
     private ArrayList<Object> getFeatureList(int index, String Y) {
         ArrayList<Object> ret = new ArrayList<Object>();
         for(int i = 0; i < data.size(); ++i) {
-            if ( data.get(i).get(data.get(i).size()-1).equals(Y) )
+            if (((String) data.get(i).get(data.get(i).size()-1)).equalsIgnoreCase(Y) )
                 ret.add(data.get(i).get(index));
+        
         }
         return ret;
     }
 
 	public void train(String trainingDataFilePath) {
-        parseData(trainingDataFilePath, true); 
+        parseData(trainingDataFilePath, true);
+       for (int i = 0 ; i < data.size(); ++i) {
+        System.out.println(data.get(i));
+       } 
         lt50k = getFeatureList(data.get(0).size()-1, "<=50k").size();
         gt50k = getFeatureList(data.get(0).size()-1, ">50k").size();
     }
 
     private double getVariance(String[] info, String Y) {
         double var = getY(Y);
+            System.out.println(var);
         for(int i = 0; i < info.length; i++) {
             // TODO : make sure that info[i] != -1 and != null
             var *= getProb(i, info[i], Y);
@@ -260,17 +315,17 @@ public class ClassifierMfl4an extends Classifier {
 
 	public void makePredictions(String testDataFilePath) {
         try {
-            Scanner sc = new Scaner(new File(testDataFilePath));
+            Scanner sc = new Scanner(new File(testDataFilePath));
             while(sc.hasNextLine()) {
                 String line = sc.nextLine();
                 System.out.print(line+ " ");
-                String[] info = line.split();
-                double var_LT50 = getVariance(info, "<=50K");
-                double var_GT50 = getVariance(info, ">50K");
+                String[] info = line.split(" ");
+                double var_LT50 = getVariance(info, "<=50k");
+                double var_GT50 = getVariance(info, ">50k");
                 if (var_LT50 > var_GT50) {
-                    System.out.println("<=50K");
+                    System.out.println("<=50k");
                 } else {
-                    System.out.println(">50K");
+                    System.out.println(">50k");
                 }
             }
         } catch (Exception e) {
@@ -285,8 +340,8 @@ public class ClassifierMfl4an extends Classifier {
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();
 				String[] info = line.split(" ");
+			    ArrayList<Object> person = new ArrayList<Object>();
 				for(int i = 0; i < info.length; i++) {
-					ArrayList<Object> person = new ArrayList<Object>();
 					//System.out.println(info[i]);
 					if(i == 0) {
 						try { 
@@ -344,9 +399,9 @@ public class ClassifierMfl4an extends Classifier {
 							System.out.println(e);
 						}
 					}
+				}
 					person.add(moreThan50k);
 					data.add(person);
-				}
 			}
 		}
 		catch (Exception e) {
