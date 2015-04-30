@@ -50,6 +50,21 @@ public class ClassifierMfl4an extends Classifier {
         return ret;
     }
 
+    /**
+     * Returns an array list of the column at index i where the corresponding Y value is passed in
+     *
+     * String Y : either >50K or <=50K
+     *
+     */
+    private ArrayList<Object> getFeatureList(int index, String Y) {
+        ArrayList<Object> ret = new ArrayList<Object>();
+        for(int i = 0; i < data.size(); ++i) {
+            if ( data.get(i).get(data.get(i).size()-1).equals(Y) )
+                ret.add(data.get(i).get(index));
+        }
+        return ret;
+    }
+
 	public void train(String trainingDataFilePath) {
         
 	}
