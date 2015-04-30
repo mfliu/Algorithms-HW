@@ -3,23 +3,16 @@ import java.util.*;
 import java.io.*;
 
 public class ClassifierMfl4an extends Classifier {
-    // probabilities
-    float age;
-	float workclass;
-	float education;
-	float educationNum;
-	float maritalStatus;
-	float occupation;
-	float relationship;
-	float race;
-	float sex;
-	float capitalGain;
-	float capitalLoss;
-    float hoursPerWeek;
-	float nativeCountry;
-    float Y;
+	String[] workClassList = {"Private", "Self-emp-not-inc", "Self-emp-inc", "Federal-gov", "Local-gov", "State-gov", "Without-pay", "Never-worked"};
+	String[] educationList = {"Bachelors", "Some-college", "11th", "HS-grad", "Prof-school", "Assoc-acdm", "Assoc-voc", "9th", "7th-8th", "12th", "Masters", "1st-4th", "10th", "Doctorate", "5th-6th", "Preschool"};
+	String[] maritalStatusList = {"Married-civ-spouse", "Divorced", "Never-married", "Separated", "Widowed", "Married-spouse-absent", "Married-AF-spouse"};
+	String[] occupationList = {"Tech-support", "Craft-repair", "Other-service", "Sales", "Exec-managerial", "Prof-specialty", "Handlers-cleaners", "Machine-op-inspct", "Adm-clerical", "Farming-fishing", "Transport-moving", "Priv-house-serv", "Protective-serv", "Armed-Forces"};
+	String[] relationshipList = {"Wife", "Own-child", "Husband", "Not-in-family", "Other-relative", "Unmarried"};
+	String[] raceList = {"White", "Asian-Pac-Islander", "Amer-Indian-Eskimo", "Other", "Black"};
+	String[] sexList = {"Female", "Male"};
+	String[] countries = {"United-States", "Cambodia", "England", "Puerto-Rico", "Canada", "Germany", "Outlying-US(Guam-USVI-etc)", "India", "Japan", "Greece", "South", "China", "Cuba", "Iran", "Honduras", "Philippines", "Italy", "Poland", "Jamaica", "Vietnam", "Mexico", "Portugal", "Ireland", "France", "Dominican-Republic", "Laos", "Ecuador", "Taiwan", "Haiti", "Columbia", "Hungary", "Guatemala", "Nicaragua", "Scotland", "Thailand", "Yugoslavia", "El-Salvador", "Trinadad&Tobago", "Peru", "Hong", "Holand-Netherlands"};
 
-	public Boolean moreThan50k = false;
+            public Boolean moreThan50k = false;
 	public ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
 
     private final int L = 4;         // arbitrarily chosen number
@@ -28,6 +21,36 @@ public class ClassifierMfl4an extends Classifier {
 		super(namesFilePath);
 		parseData(namesFilePath, true);
 	}
+
+    private int getJ(int i) {
+        if (i ==1) {
+            return workClassList.length;
+        } else if ( i == 2) {
+            return educationList.length;
+        } else if ( i == 4) {
+            return maritalStatusList.length;
+        } else if (i == 5) {
+            return occupationList.length;
+        } else if (i == 6) {
+            return relationshipList.length;
+        } else if (i == 7) {
+            return raceList.length;
+        } else if (i == 9) {
+            return sexList.length;
+        } else if (i == 12) {
+            return countries.length;
+        }
+        // TODO: do the buckets for integers
+        //
+        return -1;
+    }
+
+    /**
+     * P(i=s|Y)
+     */
+//    private float getProb(int index, String s, String Y) {
+//        List<Object> list = getFeatureList(index, Y);
+//    }
 
     private int getNumMatches(String s, List<Object> list) {
         int i = 0;
@@ -78,14 +101,6 @@ public class ClassifierMfl4an extends Classifier {
 
 	public void parseData(String fileName, Boolean training) {
 		try {
-			String[] workClassList = {"Private", "Self-emp-not-inc", "Self-emp-inc", "Federal-gov", "Local-gov", "State-gov", "Without-pay", "Never-worked"};
-			String[] educationList = {"Bachelors", "Some-college", "11th", "HS-grad", "Prof-school", "Assoc-acdm", "Assoc-voc", "9th", "7th-8th", "12th", "Masters", "1st-4th", "10th", "Doctorate", "5th-6th", "Preschool"};
-			String[] maritalStatusList = {"Married-civ-spouse", "Divorced", "Never-married", "Separated", "Widowed", "Married-spouse-absent", "Married-AF-spouse"};
-			String[] occupationList = {"Tech-support", "Craft-repair", "Other-service", "Sales", "Exec-managerial", "Prof-specialty", "Handlers-cleaners", "Machine-op-inspct", "Adm-clerical", "Farming-fishing", "Transport-moving", "Priv-house-serv", "Protective-serv", "Armed-Forces"};
-			String[] relationshipList = {"Wife", "Own-child", "Husband", "Not-in-family", "Other-relative", "Unmarried"};
-			String[] raceList = {"White", "Asian-Pac-Islander", "Amer-Indian-Eskimo", "Other", "Black"};
-			String[] sexList = {"Female", "Male"};
-			String[] countries = {"United-States", "Cambodia", "England", "Puerto-Rico", "Canada", "Germany", "Outlying-US(Guam-USVI-etc)", "India", "Japan", "Greece", "South", "China", "Cuba", "Iran", "Honduras", "Philippines", "Italy", "Poland", "Jamaica", "Vietnam", "Mexico", "Portugal", "Ireland", "France", "Dominican-Republic", "Laos", "Ecuador", "Taiwan", "Haiti", "Columbia", "Hungary", "Guatemala", "Nicaragua", "Scotland", "Thailand", "Yugoslavia", "El-Salvador", "Trinadad&Tobago", "Peru", "Hong", "Holand-Netherlands"};
 			Scanner sc = new Scanner(new File(fileName));
 			while (sc.hasNextLine()) {
 				String line = sc.nextLine();
