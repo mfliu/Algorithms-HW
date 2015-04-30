@@ -12,7 +12,128 @@ public class ClassifierMfl4an extends Classifier {
 	String[] sexList = {"Female", "Male"};
 	String[] countries = {"United-States", "Cambodia", "England", "Puerto-Rico", "Canada", "Germany", "Outlying-US(Guam-USVI-etc)", "India", "Japan", "Greece", "South", "China", "Cuba", "Iran", "Honduras", "Philippines", "Italy", "Poland", "Jamaica", "Vietnam", "Mexico", "Portugal", "Ireland", "France", "Dominican-Republic", "Laos", "Ecuador", "Taiwan", "Haiti", "Columbia", "Hungary", "Guatemala", "Nicaragua", "Scotland", "Thailand", "Yugoslavia", "El-Salvador", "Trinadad&Tobago", "Peru", "Hong", "Holand-Netherlands"};
 
-    public Boolean moreThan50k = false;
+	//age groups: 0-50, 50-100
+	public float age050Y;
+	public float age50100Y;
+	public float age050NotY;
+	public float age50100NotY;
+
+	//work class groups:
+	public float wCprivate;
+	public float wCseni;
+	public float wCsei;
+	public float wCfg;
+	public float wClg;
+	public float wCsg;
+	public float wCwp;
+	public float wCnw;
+
+	//education groups
+	public float eB;
+	public float eSC;
+	public float e11th;
+	public float eHSG;
+	public float ePS;
+	public float eAA;
+	public float eAV;
+	public float e9th;
+	public float e78th;
+	public float e12th;
+	public float eM;
+	public float e14st;
+	public float e10th;
+	public float eD;
+	public float e56th;
+	public float ePre;
+	
+	//marital status groups
+	public float mSmcs;
+	public float mSd;
+	public float mSnm;
+	public float mSs;
+	public float mSw;
+	public float mSmsa;
+	public float mSmas;
+
+	//occupation groups
+	public float oTS;
+	public float oCR;
+	public float oOS;
+	public float oS;
+	public float oEM;
+	public float oProfSpec;
+	public float oHC;
+	public float oMOI;
+	public float oAC;
+	public float oFF;
+	public float oTM;
+	public float oPHS;
+	public float oPS;
+	public float oAF;
+
+	//relationship groups
+	public float rW;
+	public float rOC;
+	public float rH;
+	public float rNIF;
+	public float rOR;
+	public float rU;
+
+	//race groups
+	public float raceW;
+	public float raceAPI;
+	public float raceAIE;
+	public float raceO;
+	public float raceB;
+
+	//gender groups
+	public float male;
+	public float female;
+
+	//country groups
+	public float cUS;
+	public float cCambodia;
+	public float cEngland;
+	public float cPuertoRico;
+	public float cCanada;
+	public float cGermany;
+	public float cOutUS;
+	public float cIndia;
+	public float cJapan;
+	public float cGreece;
+	public float cSouth;
+	public float cChina;
+	public float cCuba;
+	public float cIran;
+	public float cHonduras;
+	public float cPhillippines;
+	public float cItaly;
+	public float cPoland;
+	public float cJamaica;
+	public float cVietnam;
+	public float cMexico;
+	public float cPortugal;
+	public float cIreland;
+	public float cFrance;
+	public float cDomRep;
+	public float cLaos;
+	public float cEcuador;
+	public float cTaiwan;
+	public float cHaiti;
+	public float cColumbia;
+	public float cHungary;
+	public float cGuatemala;
+	public float cNicaragua;
+	public float cScotland;
+	public float cThailand;
+	public float cYugoslavia;
+	public float cElSalv;
+	public float cTrinandTobag;
+	public float cPeru;
+	public float cHong;
+	public float cHolNeth;
+
+  public Boolean moreThan50k = false;
 	public ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
 
     int lt50k;
@@ -61,9 +182,9 @@ public class ClassifierMfl4an extends Classifier {
         return (matches + L) / ((double)getY(Y) + L*getJ(index));
     }
 
-    private double getProb(int index, int s, String Y) {
+    private double getProb(int index, int lower, int upper, String Y) {
         List<Object> list = getFeatureList(index, Y);
-        int matches = getNumMatches(s, list);
+        int matches = getNumMatches(lower, upper, list);
         return (matches + L) / ((double)getY(Y) + L*getJ(index));
     }
 
@@ -75,10 +196,10 @@ public class ClassifierMfl4an extends Classifier {
         return i;
     }
 
-    private int getNumMatches(int s, List<Object> list) {
+    private int getNumMatches(int lower, int upper, List<Object> list) {
         int i = 0;
         for ( Object o : list ) {
-            if( s == o )  ++i;
+            if( lower <= (int) o  && (int) o <= upper)  ++i;
         }
         return i;
     }
