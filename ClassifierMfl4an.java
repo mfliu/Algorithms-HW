@@ -110,10 +110,36 @@ public class ClassifierMfl4an extends Classifier {
         parseData(trainingDataFilePath, true); 
         lt50k = getFeatureList(data.get(0).size()-1, "<=50k").size();
         gt50k = getFeatureList(data.get(0).size()-1, ">50k").size();
-	}
+    }
+
+    private double getVariance(String[] info, String Y) {
+        double var = getY(Y);
+        for(int i = 0; i < info.length; i++) {
+            // TODO : make sure that info[i] != -1 and != null
+            var *= getProb(i, info[i], Y);
+        }
+        return var;
+    }
 
 	public void makePredictions(String testDataFilePath) {
-		
+        try {
+            Scanner sc = new Scaner(new File(testDataFilePath));
+            while(sc.hasNextLine()) {
+                String line = sc.nextLine();
+                System.out.print(line+ " ");
+                String[] info = line.split();
+                double var_LT50 = getVariance(info, "<=50K");
+                double var_GT50 = getVariance(info, ">50K");
+                if (var_LT50 > var_GT50) {
+                    System.out.println("<=50K");
+                } else {
+                    System.out.println(">50K");
+                }
+            }
+        } catch (Exception e) {
+
+        }
+
 	}
 
 	public void parseData(String fileName, boolean training) {
