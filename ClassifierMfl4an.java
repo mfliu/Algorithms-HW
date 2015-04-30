@@ -162,7 +162,7 @@ public class ClassifierMfl4an extends Classifier {
     int lt50k;
     int gt50k;
 
-    private final int L = 444444;         // arbitrarily chosen number
+    private final int L = 5;         // arbitrarily chosen number
     
 	public ClassifierMfl4an(String namesFilePath) {
 		super(namesFilePath);
@@ -170,7 +170,7 @@ public class ClassifierMfl4an extends Classifier {
 	}
 
     private int getY(String Y) {
-        return Y.equals("<=50k") ? lt50k : gt50k;
+        return Y.equals("<=50K") ? lt50k : gt50k;
     }
 
     private int getJ(int i) {
@@ -296,8 +296,8 @@ public class ClassifierMfl4an extends Classifier {
 
 	public void train(String trainingDataFilePath) {
         parseData(trainingDataFilePath, true);
-        lt50k = getFeatureList(data.get(0).size()-1, "<=50k").size();
-        gt50k = getFeatureList(data.get(0).size()-1, ">50k").size();
+        lt50k = getFeatureList(data.get(0).size()-1, "<=50K").size();
+        gt50k = getFeatureList(data.get(0).size()-1, ">50K").size();
     }
 
     private double getVariance(String[] info, String Y) {
@@ -320,7 +320,7 @@ public class ClassifierMfl4an extends Classifier {
             Scanner sc = new Scanner(new File(testDataFilePath));
             while(sc.hasNextLine()) {
                 String line = sc.nextLine();
-                System.out.print(line+ " ");
+                //System.out.print(line + " ");
                 String[] info = line.split(" ");
                 double var_LT50 = getVariance(info, "<=50K");
                 double var_GT50 = getVariance(info, ">50K");
@@ -382,11 +382,11 @@ public class ClassifierMfl4an extends Classifier {
 						person.add(info[i].toLowerCase());
 					}
 					else if(i == info.length - 1 && training == true) {
-						if(info[info.length-1].equalsIgnoreCase("<=50k")) {
-							moreThan50k = "<=50k";
+						if(info[info.length-1].equalsIgnoreCase("<=50K")) {
+							moreThan50k = "<=50K";
 						}
 						else {
-							moreThan50k = ">50k"; 
+							moreThan50k = ">50K"; 
 						}
 					person.add(moreThan50k);
 					}
