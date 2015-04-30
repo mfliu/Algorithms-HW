@@ -3,19 +3,22 @@ import java.util.*;
 import java.io.*;
 
 public class ClassifierMfl4an extends Classifier {
-	public int age = -1;
-	public String workclass = "";
-	public String education = "";
-	public int educationNum = -1;
-	public String maritalStatus = "";
-	public String occupation = "";
-	public String relationship = "";
-	public String race = "";
-	public String sex = "";
-	public int capitalGain = -1;
-	public int capitalLoss = -1;
-	public int hoursPerWeek = -1;
-	public String nativeCountry = "";
+    // probabilities
+    float age;
+	float workclass;
+	float education;
+	float educationNum;
+	float maritalStatus;
+	float occupation;
+	float relationship;
+	float race;
+	float sex;
+	float capitalGain;
+	float capitalLoss;
+    float hoursPerWeek;
+	float nativeCountry;
+    float Y;
+
 	public Boolean moreThan50k = false;
 	public ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
 
@@ -93,48 +96,38 @@ public class ClassifierMfl4an extends Classifier {
 					if(i == 0) {
 						try { 
 							Integer.parseInt(info[i]); 
-							age = Integer.parseInt(info[i]); 
 							//System.out.println(age);
-							person.add(age);
+							person.add(Integer.parseInt(info[i]));
 						}
 						catch (Exception e) { 
 							System.out.println(e);
 						}
 					}
 					else if(searchArray(info[i], workClassList) != -1) {
-						workclass = info[i].toLowerCase();
-						person.add(workclass);
+						person.add(info[i].toLowerCase());
 					}
 					else if(searchArray(info[i], educationList) != -1) {
-						education = info[i];
-						educationNum = Integer.parseInt(info[i+1]);
+						person.add(info[i]);
+						person.add(Integer.parseInt(info[i+1]));
 						i = i+1;
-						person.add(education);
-						person.add(educationNum);
 					}
 					else if(searchArray(info[i], maritalStatusList) != -1) {
-						maritalStatus = info[i].toLowerCase();
-						person.add(maritalStatus);
+						person.add(info[i].toLowerCase());
 					}
 					else if(searchArray(info[i], occupationList) != -1) {
-						occupation = info[i].toLowerCase();
-						person.add(occupation);
+						person.add(info[i].toLowerCase());
 					}
 					else if(searchArray(info[i], relationshipList) != -1) {
-						relationship = info[i].toLowerCase();
-						person.add(relationship);
+						person.add(info[i].toLowerCase());
 					}
 					else if(searchArray(info[i], raceList) != -1) {
-						race = info[i].toLowerCase();
-						person.add(race);
+						person.add(info[i].toLowerCase());
 					}
 					else if(searchArray(info[i], sexList) != -1) {
-						sex = info[i].toLowerCase();
-						person.add(sex);
+						person.add(info[i].toLowerCase());
 					}
 					else if(searchArray(info[i], countries) != -1) {
-						nativeCountry = info[i].toLowerCase();
-						person.add(nativeCountry);
+						person.add(info[i].toLowerCase());
 					}
 					else if(i == info.length - 1 && training == true) {
 						if(info[info.length-1].equals("<=50k")) {
@@ -147,13 +140,10 @@ public class ClassifierMfl4an extends Classifier {
 					else {
 						//System.out.println("Looking for: " + info[i]);
 						try {
-							Integer.parseInt(info[i]); 
-							capitalGain = Integer.parseInt(info[i]); 
-							capitalLoss = Integer.parseInt(info[i+1]); 
-							hoursPerWeek = Integer.parseInt(info[i+2]);
+							person.add(Integer.parseInt(info[i]));
+							person.add(Integer.parseInt(info[i+1]));
+                            person.add(Integer.parseInt(info[i+2]));
 							i = i + 2;
-							person.add(capitalGain);
-							person.add(capitalLoss);
 						}
 						catch (Exception e) {
 							System.out.println(e);
