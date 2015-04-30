@@ -15,12 +15,19 @@ public class ClassifierMfl4an extends Classifier {
             public Boolean moreThan50k = false;
 	public ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
 
+    int lt50k;
+    int gt50k;
+
     private final int L = 4;         // arbitrarily chosen number
     
 	public ClassifierMfl4an(String namesFilePath) {
 		super(namesFilePath);
 		parseData(namesFilePath, true);
 	}
+
+    private int getY(String Y) {
+        return Y.equals("<=50k") ? lt50k : gt50k;
+    }
 
     private int getJ(int i) {
         if (i ==1) {
@@ -48,9 +55,17 @@ public class ClassifierMfl4an extends Classifier {
     /**
      * P(i=s|Y)
      */
-//    private float getProb(int index, String s, String Y) {
-//        List<Object> list = getFeatureList(index, Y);
-//    }
+    private double getProb(int index, String s, String Y) {
+        List<Object> list = getFeatureList(index, Y);
+        int matches = getNumMatches(s, list);
+        return (matches + L) / ((double)getY(Y) + L*getJ(index));
+    }
+
+    private double getProb(int index, int s, String Y) {
+        List<Object> list = getFeatureList(index, Y);
+        int matches = getNumMatches(s, list);
+        return (matches + L) / ((double)getY(Y) + L*getJ(index));
+    }
 
     private int getNumMatches(String s, List<Object> list) {
         int i = 0;
@@ -93,6 +108,8 @@ public class ClassifierMfl4an extends Classifier {
 
 	public void train(String trainingDataFilePath) {
         
+        lt50k = getFeatureList(data.get(0).size()-1, "<=50k").size();
+        gt50k = getFeatureList(data.get(0).size()-1, ">50k").size();
 	}
 
 	public void makePredictions(String testDataFilePath) {
