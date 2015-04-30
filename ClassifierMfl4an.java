@@ -26,6 +26,22 @@ public class ClassifierMfl4an extends Classifier {
 		parseData(namesFilePath, true);
 	}
 
+    private int getNumMatches(String s, List<Object> list) {
+        int i = 0;
+        for ( Object o : list ) {
+            if( s. equals((String)o)) ++i;
+        }
+        return i;
+    }
+
+    private int getNumMatches(int s, List<Object> list) {
+        int i = 0;
+        for ( Object o : list ) {
+            if( s == o )  ++i;
+        }
+        return i;
+    }
+
     private ArrayList<Object> getFeatureList(int index) {
         ArrayList<Object> ret = new ArrayList<Object>();
         for(int i = 0; i < data.size(); ++i) {
