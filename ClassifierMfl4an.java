@@ -12,6 +12,12 @@ public class ClassifierMfl4an extends Classifier {
 	String[] sexList = {"Female", "Male"};
 	String[] countries = {"United-States", "Cambodia", "England", "Puerto-Rico", "Canada", "Germany", "Outlying-US(Guam-USVI-etc)", "India", "Japan", "Greece", "South", "China", "Cuba", "Iran", "Honduras", "Philippines", "Italy", "Poland", "Jamaica", "Vietnam", "Mexico", "Portugal", "Ireland", "France", "Dominican-Republic", "Laos", "Ecuador", "Taiwan", "Haiti", "Columbia", "Hungary", "Guatemala", "Nicaragua", "Scotland", "Thailand", "Yugoslavia", "El-Salvador", "Trinadad&Tobago", "Peru", "Hong", "Holand-Netherlands"};
 
+	//group divisions
+	public int numAgeGroups = 2;
+	public int numCapGainsGroups = 2;
+	public int numCapLossesGroups = 2;
+	public int numHoursWorkedGroups = 2;
+
 	//age groups: 0-50, 50-100
 	public float age050Y;
 	public float age50100Y;
@@ -132,6 +138,16 @@ public class ClassifierMfl4an extends Classifier {
 	public float cPeru;
 	public float cHong;
 	public float cHolNeth;
+
+	//capital gains capital losses groups
+	public float capGain05000;
+	public float capGain500010000;
+	public float capLoss05000;
+	public float capLoss500010000;
+
+	//hours worked groups
+	public float hoursWork030;
+	public float hoursWork30More;
 
   	public String moreThan50k = "";
 	public ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
