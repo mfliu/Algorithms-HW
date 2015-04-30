@@ -12,7 +12,7 @@ public class ClassifierMfl4an extends Classifier {
 	String[] sexList = {"Female", "Male"};
 	String[] countries = {"United-States", "Cambodia", "England", "Puerto-Rico", "Canada", "Germany", "Outlying-US(Guam-USVI-etc)", "India", "Japan", "Greece", "South", "China", "Cuba", "Iran", "Honduras", "Philippines", "Italy", "Poland", "Jamaica", "Vietnam", "Mexico", "Portugal", "Ireland", "France", "Dominican-Republic", "Laos", "Ecuador", "Taiwan", "Haiti", "Columbia", "Hungary", "Guatemala", "Nicaragua", "Scotland", "Thailand", "Yugoslavia", "El-Salvador", "Trinadad&Tobago", "Peru", "Hong", "Holand-Netherlands"};
 
-            public Boolean moreThan50k = false;
+    public Boolean moreThan50k = false;
 	public ArrayList<ArrayList<Object>> data = new ArrayList<ArrayList<Object>>();
 
     int lt50k;
@@ -107,7 +107,7 @@ public class ClassifierMfl4an extends Classifier {
     }
 
 	public void train(String trainingDataFilePath) {
-        
+        parseData(trainingDataFilePath, true); 
         lt50k = getFeatureList(data.get(0).size()-1, "<=50k").size();
         gt50k = getFeatureList(data.get(0).size()-1, ">50k").size();
 	}
@@ -116,7 +116,7 @@ public class ClassifierMfl4an extends Classifier {
 		
 	}
 
-	public void parseData(String fileName, Boolean training) {
+	public void parseData(String fileName, boolean training) {
 		try {
 			Scanner sc = new Scanner(new File(fileName));
 			while (sc.hasNextLine()) {
