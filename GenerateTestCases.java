@@ -159,7 +159,7 @@ public class GenerateTestCases {
 
     public static void main(String[] args) throws Exception{
         PrintWriter pw = new PrintWriter("census.test");
-        int NUM_CASES = 5000;
+        int NUM_CASES = 500;
         for (int i = 0; i < NUM_CASES; ++i) {
             int age = getAge();
             String work = getWorkclass();
